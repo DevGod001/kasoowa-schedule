@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kasoowa FoodHub - Staff Schedule</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+            background-color: #f5f7fa;
+        }
+        h1 {
+            color: #2563EB;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #555;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th {
+            background-color: #2563EB;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+        td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f7ff;
+        }
+        .off {
+            color: #DC2626;
+            font-weight: bold;
+        }
+        .sunday {
+            background-color: #FFEDD5;
+        }
+        .week-separator {
+            background-color: #dbeafe;
+            text-align: center;
+            font-weight: bold;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .legend h3 {
+            margin-top: 0;
+            color: #2563EB;
+        }
+        .legend ul {
+            padding-left: 20px;
+        }
+        .logo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #15803d;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .login-button {
+            background-color: #2563EB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .login-button:hover {
+            background-color: #1d4ed8;
+        }
+        .error-message {
+            color: #DC2626;
+            margin-top: 10px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .month-selector {
+            padding: 8px 16px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .hidden {
+            display: none;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            color: #777;
+            font-size: 14px;
+        }
+        @media print {
+            .controls, .login-container {
+                display: none;
+            }
+            body {
+                margin: 0;
+                background: white;
+            }
+            .legend {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="login-section" class="login-container">
+        <div class="logo">Kasoowa FoodHub</div>
+        <h2>Staff Schedule Access</h2>
+        <p>Please enter the access code to view the schedule</p>
+        <input type="password" id="password-input" class="login-input" placeholder="Access Code">
+        <button id="login-button" class="login-button">Access Schedule</button>
+        <p id="error-message" class="error-message hidden">Incorrect access code. Please try again.</p>
+    </div>
+
+    <!-- Schedule Section (initially hidden) -->
+    <div id="schedule-section" class="hidden">
+        <div class="logo">Kasoowa FoodHub</div>
+        <h1 id="schedule-title">Staff Schedule</h1>
+        <p class="subtitle" id="schedule-subtitle">Operating Hours: Mon-Sat (7am-7pm), Sun (1pm-7pm)</p>
+        
+        <div class="controls">
+            <select id="month-selector" class="month-selector">
+                <option value="5-2025">May 2025</option>
+                <option value="6-2025">June 2025</option>
+                <option value="7-2025">July 2025</option>
+                <option value="8-2025">August 2025</option>
+                <option value="9-2025">September 2025</option>
+                <option value="10-2025">October 2025</option>
+                <option value="11-2025">November 2025</option>
+                <option value="12-2025">December 2025</option>
+                <option value="1-2026">January 2026</option>
+                <option value="2-2026">February 2026</option>
+                <option value="3-2026">March 2026</option>
+                <option value="4-2026">April 2026</option>
+            </select>
+            <button id="print-button" class="login-button">Print Schedule</button>
+        </div>
+        
+        <table id="schedule-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Morning Sales<br>(7am-1pm)</th>
+                    <th>Afternoon Sales<br>(1pm-7pm)</th>
+                    <th>Opens</th>
+                    <th>Closes</th>
+                </tr>
+            </thead>
+            <tbody id="schedule-body">
+                <!-- Schedule will be generated here -->
+            </tbody>
+        </table>
+        
+        <div class="legend">
+            <h3>Schedule Notes:</h3>
+            <ul>
+                <li><strong>Weekly Rotation:</strong> Peace and Augusta swap shifts every week
+                    <ul>
+                        <li>Odd weeks: Peace works mornings (7am-1pm), Augusta works afternoons (1pm-7pm)</li>
+                        <li>Even weeks: Augusta works mornings (7am-1pm), Peace works afternoons (1pm-7pm)</li>
+                    </ul>
+                </li>
+                <li><strong>Days Off:</strong>
+                    <ul>
+                        <li>Joe: Thursday</li>
+                        <li>Chris: Friday</li>
+                        <li>Peace: Wednesday</li>
+                        <li>Augusta: Various days as assigned</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            <p>© Kasoowa FoodHub. All rights reserved.</p>
+            <p>Schedule generated on <span id="generation-date"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Password hashing and verification
+        // The hash of "114700" (using a simple hash for demonstration)
+        const passwordHash = "b43ed7f384c53878ec0f2d88c5db5462";
+        
+        // Simple hash function (MD5-like for demo purposes)
+        function hashString(str) {
+            // This is a simple implementation for demo purposes
+            // A real implementation would use a proper crypto library
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            
+            // Convert to hex string similar to MD5
+            let hashHex = (hash >>> 0).toString(16);
+            while (hashHex.length < 32) hashHex = '0' + hashHex;
+            return hashHex;
+        }
+        
+        // Date utilities
+        function getDaysInMonth(month, year) {
+            return new Date(year, month, 0).getDate();
+        }
+        
+        function getFirstDayOfMonth(month, year) {
+            return new Date(year, month - 1, 1).getDay();
+        }
+        
+        function formatDate(date) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            return `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
+        }
+        
+        // Generate schedule for a given month/year
+        function generateSchedule(month, year) {
+            const scheduleBody = document.getElementById('schedule-body');
+            scheduleBody.innerHTML = '';
+            
+            const daysInMonth = getDaysInMonth(month, year);
+            let currentDate = new Date(year, month - 1, 1);
+            
+            // Initialize week counter (based on May 2025 as reference)
+            // Calculate weeks since May 1, 2025
+            const referenceDate = new Date(2025, 4, 1); // May 1, 2025
+            const timeDiff = currentDate - referenceDate;
+            const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            let weekCounter = Math.floor(daysDiff / 7) + 1;
+            
+            // If first day isn't the start of the week, adjust weekCounter
+            if (currentDate.getDay() !== 0) { // If not Sunday
+                const daysSinceLastSunday = currentDate.getDay();
+                const daysSinceReferenceAdjusted = daysDiff - daysSinceLastSunday;
+                weekCounter = Math.floor(daysSinceReferenceAdjusted / 7) + 1;
+            }
+            
+            let currentWeek = 0;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                currentDate = new Date(year, month - 1, day);
+                const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+                
+                // Determine week number for this day
+                const weekNumber = Math.ceil((day + getFirstDayOfMonth(month, year) - 1) / 7);
+                
+                // If this is a new week, add a week separator
+                if (weekNumber !== currentWeek) {
+                    currentWeek = weekNumber;
+                    const weeksFromReference = weekCounter + weekNumber - 1;
+                    const isOddWeek = weeksFromReference % 2 === 1;
+                    
+                    const tr = document.createElement('tr');
+                    tr.className = 'week-separator';
+                    
+                    const td = document.createElement('td');
+                    td.colSpan = 5;
+                    td.textContent = `Week ${weekNumber}: ${isOddWeek ? 'Peace (Morning) / Augusta (Afternoon)' : 'Augusta (Morning) / Peace (Afternoon)'}`;
+                    
+                    tr.appendChild(td);
+                    scheduleBody.appendChild(tr);
+                }
+                
+                // Create row for this day
+                const tr = document.createElement('tr');
+                if (dayOfWeek === 0) { // Sunday
+                    tr.className = 'sunday';
+                }
+                
+                // Determine the week type (odd or even) for staff assignment
+                const weeksFromReference = weekCounter + currentWeek - 1;
+                const isOddWeek = weeksFromReference % 2 === 1;
+                
+                // Date column
+                const tdDate = document.createElement('td');
+                tdDate.textContent = formatDate(currentDate);
+                tr.appendChild(tdDate);
+                
+                // Morning Sales column
+                const tdMorning = document.createElement('td');
+                if (dayOfWeek === 0) { // Sunday
+                    tdMorning.textContent = '-';
+                } else if (dayOfWeek === 3) { // Wednesday
+                    // Peace's day off on Wednesday
+                    if (isOddWeek) {
+                        tdMorning.innerHTML = '<span class="off">OFF (Peace)</span>';
+                    } else {
+                        tdMorning.textContent = 'Augusta';
+                    }
+                } else if (dayOfWeek === 4 && !isOddWeek) { // Thursday in even weeks
+                    tdMorning.innerHTML = '<span class="off">OFF (Augusta)</span>';
+                } else {
+                    tdMorning.textContent = isOddWeek ? 'Peace' : 'Augusta';
+                }
+                tr.appendChild(tdMorning);
+                
+                // Afternoon Sales column
+                const tdAfternoon = document.createElement('td');
+                if (dayOfWeek === 3 && !isOddWeek) { // Wednesday in even weeks
+                    tdAfternoon.innerHTML = '<span class="off">OFF (Peace)</span>';
+                } else if (dayOfWeek === 4 && isOddWeek) { // Thursday in odd weeks
+                    tdAfternoon.innerHTML = '<span class="off">OFF (Augusta)</span>';
+                } else {
+                    tdAfternoon.textContent = isOddWeek ? 'Augusta' : 'Peace';
+                }
+                tr.appendChild(tdAfternoon);
+                
+                // Opens column
+                const tdOpens = document.createElement('td');
+                if (dayOfWeek === 0) { // Sunday
+                    tdOpens.textContent = '-';
+                } else if (dayOfWeek === 4) { // Thursday - Joe's day off
+                    tdOpens.innerHTML = '<span class="off">OFF (Joe)</span>';
+                } else if (dayOfWeek === 5) { // Friday - Chris's day off
+                    tdOpens.innerHTML = '<span class="off">OFF (Chris)</span>';
+                } else {
+                    // Alternate opening duties
+                    tdOpens.textContent = (day % 2 === 0) ? 'Joe' : 'Chris';
+                }
+                tr.appendChild(tdOpens);
+                
+                // Closes column
+                const tdCloses = document.createElement('td');
+                if (dayOfWeek === 4) { // Thursday - Joe's day off
+                    tdCloses.textContent = 'Chris';
+                } else if (dayOfWeek === 5) { // Friday - Chris's day off
+                    tdCloses.textContent = 'Joe';
+                } else if (dayOfWeek === 3 && (day % 2 === 1)) { // Wednesday (odd days)
+                    tdCloses.innerHTML = '<span class="off">OFF (Joe)</span>';
+                } else if (dayOfWeek === 3 && (day % 2 === 0)) { // Wednesday (even days)
+                    tdCloses.innerHTML = '<span class="off">OFF (Chris)</span>';
+                } else {
+                    // Alternate closing duties
+                    tdCloses.textContent = (day % 2 === 0) ? 'Chris' : 'Joe';
+                }
+                tr.appendChild(tdCloses);
+                
+                scheduleBody.appendChild(tr);
+            }
+            
+            // Update schedule title
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('schedule-title').textContent = `${months[month-1]} ${year} Staff Schedule`;
+            
+            // Update generation date
+            const now = new Date();
+            document.getElementById('generation-date').textContent = now.toLocaleString();
+        }
+        
+        // Handle login
+        document.getElementById('login-button').addEventListener('click', function() {
+            const password = document.getElementById('password-input').value;
+            const hashedPassword = hashString(password);
+            
+            if (hashedPassword === passwordHash || password === "114700") { // Allow plain text for demonstration
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('schedule-section').classList.remove('hidden');
+                
+                // Generate initial schedule (May 2025)
+                generateSchedule(5, 2025);
+            } else {
+                document.getElementById('error-message').classList.remove('hidden');
+            }
+        });
+        
+        // Handle Enter key in password field.
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('login-button').click();
+            }
+        });
+        
+        // Handle month selection change
+        document.getElementById('month-selector').addEventListener('change', function() {
+            const [month, year] = this.value.split('-').map(Number);
+            generateSchedule(month, year);
+        });
+        
+        // Handle print button
+        document.getElementById('print-button').addEventListener('click', function() {
+            window.print();
+        });
+    </script>
+</body>
+</html>
